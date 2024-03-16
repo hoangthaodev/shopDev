@@ -24,7 +24,8 @@ const productSchema = new Schema({
 const clothingSchema = new Schema({
     brain: { type: String, require: true },
     size: String,
-    material: String
+    material: String,
+    product_shop: { type: Schema.Types.ObjectId, ref: 'Shop' }
 }, {
     collection: 'clothes',
     timestamps: true
@@ -33,9 +34,10 @@ const clothingSchema = new Schema({
 // define the product type = electtronic
 
 const electronicSchema = new Schema({
-    manufature: { type: String, require: true },
+    manufacture: { type: String, require: true },
     model: String,
-    color: String
+    color: String,
+    product_shop: { type: Schema.Types.ObjectId, ref: 'Shop' }
 }, {
     collection: 'electronics',
     timestamps: true
