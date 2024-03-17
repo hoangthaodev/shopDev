@@ -1,19 +1,67 @@
 'use strict'
 
 const { SuccessResponse } = require("../core/success.response")
-const ProductFactory = require("../services/product.service")
+const ProductService = require("../services/product.service")
 
 
 class ProductController {
     createProduct = async (req, res, next) => {
         new SuccessResponse({
             message: 'Create new Product success!',
-            metadata: await ProductFactory.createProduct(req.body.product_type, {
+            metadata: await ProductService.createProduct(req.body.product_type, {
                 ...req.body,
                 product_shop: req.user.userId
             })
         }).send(res)
     }
+
+    publishProductByShop = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'publishProductByShop success!',
+            metadata: await ProductService.publishProductByShop({
+                product_shop: req.user.userId,
+                product_id: req.params.id
+            })
+        }).send(res)
+    }
+
+    unPublishProductByShop = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'unPublishProductByShop success!',
+            metadata: await ProductService.unPublishProductByShop({
+                product_shop: req.user.userId,
+                product_id: req.params.id
+            })
+        }).send(res)
+    }
+
+    // query //
+    getAllDraftForShop = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'getAllDraftForShop success!',
+            metadata: await ProductService.findAllDraftForShop({
+                product_shop: req.user.userId
+            })
+        }).send(res)
+    }
+
+    getAllPublishedForShop = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'getAllPublishedForShop success!',
+            metadata: await ProductService.findAllPublishedForShop({
+                product_shop: req.user.userId
+            })
+        }).send(res)
+    }
+
+    getListSearchProduct = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'getListSearchProduct success!',
+            metadata: await ProductService.getListsearchProducts(req.params)
+        }).send(res)
+    }
+
+    //end query //
 }
 
 module.exports = new ProductController()
