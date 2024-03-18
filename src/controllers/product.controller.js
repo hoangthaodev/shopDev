@@ -57,7 +57,23 @@ class ProductController {
     getListSearchProduct = async (req, res, next) => {
         new SuccessResponse({
             message: 'getListSearchProduct success!',
-            metadata: await ProductService.getListsearchProducts(req.params)
+            metadata: await ProductService.searchProducts(req.params)
+        }).send(res)
+    }
+
+    findAllProducts = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'getListSearchProduct success!',
+            metadata: await ProductService.findAllProducts(req.query)
+        }).send(res)
+    }
+
+    findProducts = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'getListSearchProduct success!',
+            metadata: await ProductService.findProducts({
+                product_id: req.params.product_id
+            })
         }).send(res)
     }
 
