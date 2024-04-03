@@ -12,21 +12,22 @@ const apiKey = async (req, res, next) => {
         const key = req.headers[HEADER.AIP_KEY]?.toString()
         if (!key) {
             return res.status(403).json({
-                message: 'Forbidden Error'
+                message: 'APIKEY need to import'
             })
         }
         // check objKey
         const objKey = await findById(key)
+        console.log('objkey:::', objKey);
         if (!objKey) {
             return res.status(403).json({
-                message: 'Forbidden Error'
+                message: 'ApiKey not match'
             })
         }
         req.objKey = objKey
         return next()
 
     } catch (error) {
-
+        return error
     }
 }
 
