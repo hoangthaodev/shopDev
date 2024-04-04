@@ -36,7 +36,7 @@ class AccessController {
     }
 
     signUp = async (req, res, next) => {
-
+        console.log('IN HERE::::')
         new CREATED({
             message: 'Registered OK!',
             metadata: await AccessService.signUp(req.body),

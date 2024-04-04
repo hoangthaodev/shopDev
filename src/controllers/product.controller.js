@@ -27,6 +27,7 @@ class ProductController {
     }
 
     publishProductByShop = async (req, res, next) => {
+        console.log('here:::')
         new SuccessResponse({
             message: 'publishProductByShop success!',
             metadata: await ProductService.publishProductByShop({
