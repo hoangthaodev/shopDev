@@ -30,7 +30,10 @@ var cartSchema = new Schema({
 
 }, {
     collection: COLLECTION_NAME,
-    timestamps: true
+    timestamps: {
+        createdAt: 'createOn',
+        updatedAt: 'modifineOn'
+    }
 });
 
 //Export the model
