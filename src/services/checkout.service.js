@@ -7,6 +7,8 @@ const {
 } = require('../core/error.response')
 const { checkProductByServer } = require("../models/repositories/product.repo")
 const { getDiscountAmount } = require("./discount.service")
+const { acquireLock, releaseLock } = require("./redis.service")
+const { order } = require('../models/order.model')
 
 class CheckoutService {
     //login and without login
@@ -114,6 +116,78 @@ class CheckoutService {
             shop_order_ids_new,
             checkout_order
         }
+    }
+
+    //order
+    static async orderByUser({
+        shop_order_ids_new,
+        cartId,
+        userId,
+        user_address = {},
+        user_payment = {}
+    }) {
+        const { shop_order_ids_new, checkout_order } = await CheckoutService.checkoutReview({
+            cartId,
+            userId,
+            shop_order_ids
+        })
+
+        //check laij motj lan nua xem vuot ton kho hay khong?
+        //get new array products
+        const products = shop_order_ids_new.flatMap(order => order.item_products)
+        console.log(`[1]::`, products)
+        const acquireProduct = []
+        for (let i = 0; i < products.length; i++) {
+            const { productId, quantity } = products[i]
+            const keyLock = await acquireLock(productId, quantity, cartId)
+            acquireProduct.push(keyLock ? true : false)
+            if (keyLock) {
+                await releaseLock(keyLock)
+            }
+        }
+
+        // check if co mot san pham het hang trong kho
+        if (acquireProduct.includes(false)) {
+            throw new BadRequestError(`Mot so san pham da duoc cap nhat, vui long quay lai gio hang...`)
+        }
+
+        const newOrder = await order.create({
+            order_userId: userId,
+            order_checkout: checkout_order,
+            order_shopping: user_address,
+            order_payment: user_payment,
+            order_products: shop_order_ids_new
+        })
+        //truong hop: neu insert thanh cong thi remove product co trong cart
+        if (newOrder) {
+            //remove product in my cart
+        }
+
+        return newOrder
+    }
+    /**
+     * Query orders [user]
+     */
+    static async getOrderByUser() {
+
+    }
+    /**
+     * Query orders using id [user]
+     */
+    static async getOneOrderByUser() {
+
+    }
+    /**
+     * cancel orders [user]
+     */
+    static async cancelOrderByUser() {
+
+    }
+    /**
+     * Update orders status [Shop | Admin]
+     */
+    static async updateOrderStatusByShop() {
+
     }
 }
 
