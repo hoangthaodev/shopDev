@@ -24,7 +24,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
         })
 
         //
-        JWT.verify(payload, publicKey, (err, decode) => {
+        JWT.verify(accessToken, publicKey, (err, decode) => {
             if (err) {
                 console.error(`error verify::`, err)
             } else {
